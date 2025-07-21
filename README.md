@@ -1,4 +1,4 @@
-# Documentação Completa: React Básicos
+# Documentação: React Básicos
 
 ---
 
