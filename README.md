@@ -358,11 +358,120 @@ function MyComponent({ items }) {
 
 ---
 
+## 🧠 Hooks Avançados
+
+### `useReducer`: Para estado complexo
+
+`useReducer` é uma alternativa ao `useState` para gerenciar **estados mais complexos**, especialmente quando:
+
+* O próximo estado depende do anterior
+* Existem múltiplas ações que afetam o estado
+* Você quer separar a lógica de atualização do componente
+
+**Exemplo:**
+
+```jsx
+const initialState = { count: 0 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment': return { count: state.count + 1 };
+    case 'decrement': return { count: state.count - 1 };
+    default: return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <>
+      <p>{state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+    </>
+  );
+}
+```
+
+---
+
+### `useMemo`: Para otimização de performance
+
+`useMemo` **memoriza o resultado de uma função** pesada, evitando que ela seja reexecutada em toda renderização.
+
+Use quando:
+
+* Há cálculos custosos
+* O valor só deve mudar se dependências mudarem
+
+**Exemplo:**
+
+```jsx
+const expensiveValue = useMemo(() => {
+  return computeHeavyStuff(data);
+}, [data]);
+```
+
+Se `data` não mudar, o cálculo não será refeito.
+
+---
+
+### `useCallback`: Para memorização de funções
+
+`useCallback` **memoriza a definição de uma função**, útil quando você passa essa função como prop para componentes filhos otimizados com `React.memo`.
+
+Use quando:
+
+* Uma função é passada como prop
+* Deseja evitar recriações desnecessárias da função
+
+**Exemplo:**
+
+```jsx
+const handleClick = useCallback(() => {
+  console.log('clicou');
+}, []);
+```
+
+---
+
+### Custom Hooks: Para lógica reutilizável
+
+**Custom Hooks** são funções que começam com `use` e encapsulam lógica reutilizável com hooks internos (`useState`, `useEffect`, etc.).
+
+Use quando:
+
+* Há repetição de lógica em vários componentes
+* Quer organizar melhor seu código
+
+**Exemplo:**
+
+```jsx
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+}
+
+// Uso
+function Component() {
+  const width = useWindowWidth();
+  return <p>Largura da janela: {width}px</p>;
+}
+```
+
+---
+
+
 ## 📚 Próximos Passos
 
-Após dominar estes hooks básicos, você pode explorar:
-- **useReducer**: Para estado complexo
-- **useMemo**: Para otimização de performance
-- **useCallback**: Para memorização de funções
-- **Custom Hooks**: Para lógica reutilizável
+Após dominar estes hooks básicos e complexo, falta:
+
 - **Libraries**: React Router, Redux Toolkit, React Query
